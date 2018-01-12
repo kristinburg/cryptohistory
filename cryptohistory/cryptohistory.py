@@ -1,8 +1,6 @@
 import time
 from datetime import datetime
 
-# convert datetime to unix timestamp
-# 2018-01-31 01:58:11:00
 
 # convert string date to datetime object
 def convert_datetime_to_timestamp(string_datetime):
@@ -10,7 +8,14 @@ def convert_datetime_to_timestamp(string_datetime):
     dt = time.mktime(converted_datetime.timetuple())
     return int(dt) * 1000
 
-print(convert_datetime_to_timestamp('2016-05-10 23:57:44'))
-print(convert_datetime_to_timestamp('2016-6-15 23:57:44'))
 
-# https://graphs.coinmarketcap.com/currencies/bitcoin/n1/n2/
+def generate_url_by_dates(timestamp_start, timestamp_end):
+    starttime = convert_datetime_to_timestamp(timestamp_start)
+    endtime = convert_datetime_to_timestamp(timestamp_end)
+    url = 'https://graphs.coinmarketcap.com/currencies/bitcoin/'
+    return url + str(starttime) + '/' + str(endtime)
+
+
+print(convert_datetime_to_timestamp('2017-05-10 23:57:44'))
+print(convert_datetime_to_timestamp('2017-6-15 23:57:44'))
+print(generate_url_by_dates('2017-05-10 23:57:44', '2017-6-15 23:57:44'))
