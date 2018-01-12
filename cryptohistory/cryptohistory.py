@@ -1,5 +1,6 @@
 import time
 from datetime import datetime
+import requests
 
 
 # convert string date to datetime object
@@ -9,7 +10,7 @@ def convert_datetime_to_timestamp(string_datetime):
     return int(dt) * 1000
 
 
-def generate_url_by_dates(timestamp_start, timestamp_end):
+def generate_bitcoin_url_by_dates(timestamp_start, timestamp_end):
     starttime = convert_datetime_to_timestamp(timestamp_start)
     endtime = convert_datetime_to_timestamp(timestamp_end)
     url = 'https://graphs.coinmarketcap.com/currencies/bitcoin/'
@@ -17,4 +18,7 @@ def generate_url_by_dates(timestamp_start, timestamp_end):
 
 print(convert_datetime_to_timestamp('2017-05-10 23:57:44'))
 print(convert_datetime_to_timestamp('2017-6-15 23:57:44'))
-print(generate_url_by_dates('2017-05-10 23:57:44', '2017-6-15 23:57:44'))
+url = (generate_bitcoin_url_by_dates('2017-05-10 23:57:44', '2017-6-15 23:57:44'))
+
+r = requests.get(url)
+print(r.headers)
