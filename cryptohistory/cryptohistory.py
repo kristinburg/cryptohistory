@@ -2,36 +2,44 @@ import time
 from datetime import datetime
 import requests
 
+# append H:M:S to datetime
+def stringdate_to_stringdatetime(string_date, end=False):
+    validate_date_string(string_date)
+    if end:
+        return '{0} 23:59:59'.format(string_date)
+    return '{0} 00:00:00'.format(string_date)
+
+def validate_date_string(value):
+    try:
+        datetime.strptime(value, '%Y-%m-%d')
+    except ValueError:
+        raise ValueError('Incorrect data format, should be YYYY-MM-DD')
 
 # convert string_date to datetime object
-def convert_stringdate_to_datetime(string_datetime):
-    converted_datetime = datetime.strptime(string_datetime, '%Y-%m-%d %H:%M:%S')
-    return converted_datetime
+def stringdate_to_datetime(string_datetime):
+    return datetime.strptime(string_datetime, '%Y-%m-%d %H:%M:%S')
 
 # convert string date to integer in milliseconds (for url)
-def convert_datetime_to_ms_integer(string_datetime):
-    dt = convert_stringdate_to_datetime(string_datetime)
-    return int(dt) * 1000
+def datetime_to_timestamp(datetime):
+    return int(datetime.timestamp()) * 1000
 
-
-def generate_bitcoin_url_by_dates(timestamp_start, timestamp_end):
-    starttime = convert_datetime_to_ms_integer(timestamp_start)
-    endtime = convert_datetime_to_ms_integer(timestamp_end)
-    url = 'https://graphs.coinmarketcap.com/currencies/bitcoin/'
-    return (f'{url}{str(starttime)}/{str(endtime)}')
+def generate_bitcoin_url(start_datetime, end_datetime):
+    start_timestamp = datetime_to_timestamp(timestamp_start)
+    end_timestamp = datetime_to_timestamp(timestamp_end)
+    url = 'https://graphs.coinmarketcap.com/currencies/bitcoin'
+    return f'{url}/{start_timestamp}/{end_timestamp}/'
 
 
 def get_crypto_historical_data(string_startdate, string_enddate):
     pass
-    # ts = convert_datetime_to_timestamp(startdate)
+    # ts = datetime_to_timestamp(startdate)
     # return(ts)
 
-# get_crypto_historical_data('2017-05-10', '2017-05-11')
 
-# input starttime and endtime (date to date), automatically adds time
+# input start_date and end_date, automatically adds time(00:00:00)
 # for loop that increases one hour (timedelta(hours=1))
-# generate csv of all the urls to loop through based on starttime and endtime
-# loop to get data from each hour between starttime and endtime
+# generate csv of all the urls to loop through based on start_date and end_date
+# loop to get data from each hour between start_date and end_date
 
 # r = requests.get(url)
 # print(r.headers)
