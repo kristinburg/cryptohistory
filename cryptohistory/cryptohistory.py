@@ -29,8 +29,8 @@ def datetime_to_timestamp(dt):
 
 
 def generate_bitcoin_url(start_datetime, end_datetime):
-    start_timestamp = datetime_to_timestamp(timestamp_start)
-    end_timestamp = datetime_to_timestamp(timestamp_end)
+    start_timestamp = datetime_to_timestamp(start_datetime)
+    end_timestamp = datetime_to_timestamp(end_datetime)
     url = 'https://graphs.coinmarketcap.com/currencies/bitcoin'
     return f'{url}/{start_timestamp}/{end_timestamp}/'
 
@@ -41,7 +41,7 @@ def get_crypto_historical_data(string_startdate, string_enddate):
     d = start_date
     delta = timedelta(hours=1)
     while d <= end_date:
-        print(d, d+delta)
+        print(generate_bitcoin_url(d, d+delta))
         d += delta
 
 
