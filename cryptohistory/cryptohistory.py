@@ -20,8 +20,8 @@ def stringdate_to_datetime(string_datetime):
     return datetime.strptime(string_datetime, '%Y-%m-%d %H:%M:%S')
 
 # convert string date to integer in milliseconds (for url)
-def datetime_to_timestamp(datetime):
-    return int(datetime.timestamp()) * 1000
+def datetime_to_timestamp(dt):
+    return int(dt.timestamp()) * 1000
 
 def generate_bitcoin_url(start_datetime, end_datetime):
     start_timestamp = datetime_to_timestamp(timestamp_start)
