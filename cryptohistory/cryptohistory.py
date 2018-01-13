@@ -1,5 +1,5 @@
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import requests
 
 
@@ -36,14 +36,23 @@ def generate_bitcoin_url(start_datetime, end_datetime):
 
 
 def get_crypto_historical_data(string_startdate, string_enddate):
-    pass
-    # ts = datetime_to_timestamp(startdate)
-    # return(ts)
+    start_date = stringdate_to_datetime(string_startdate)
+    end_date = stringdate_to_datetime(string_enddate)
+    d = start_date
+    delta = timedelta(hours=1)
+    while d <= end_date:
+        print(d, d+delta)
+        d += delta
+
+
+x = '2017-12-01 00:00:00'
+y = '2017-12-08 13:00:00'
+print(get_crypto_historical_data(x, y))
 
 
 # input start_date and end_date, automatically adds time(00:00:00)
 # for loop that increases one hour (timedelta(hours=1))
-# generate csv of all the urls to loop through based on start_date and end_date
+# generate csv of all the urls to loop through based on start_date and end_date hourly intervals
 # loop to get data from each hour between start_date and end_date
 
 # r = requests.get(url)
