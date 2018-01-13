@@ -1,1 +1,3 @@
 cryptohistory.csv
+.cache/
+htmlcov/
