@@ -2,6 +2,7 @@ import time
 from datetime import datetime
 import requests
 
+
 # append H:M:S to datetime
 def stringdate_to_stringdatetime(string_date, end=False):
     validate_date_string(string_date)
@@ -9,19 +10,23 @@ def stringdate_to_stringdatetime(string_date, end=False):
         return '{0} 23:59:59'.format(string_date)
     return '{0} 00:00:00'.format(string_date)
 
+
 def validate_date_string(value):
     try:
         datetime.strptime(value, '%Y-%m-%d')
     except ValueError:
         raise ValueError('Incorrect data format, should be YYYY-MM-DD')
 
+
 # convert string_date to datetime object
 def stringdate_to_datetime(string_datetime):
     return datetime.strptime(string_datetime, '%Y-%m-%d %H:%M:%S')
 
+
 # convert string date to integer in milliseconds (for url)
 def datetime_to_timestamp(dt):
     return int(dt.timestamp()) * 1000
+
 
 def generate_bitcoin_url(start_datetime, end_datetime):
     start_timestamp = datetime_to_timestamp(timestamp_start)
