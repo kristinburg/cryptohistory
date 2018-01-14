@@ -4,8 +4,10 @@ Crypto History
 Testing
 -------
 
-$ pip install -r requirements-testing.txt
-$ pytest
+::
+
+    $ pip install -r requirements-testing.txt
+    $ pytest
 
 
 Coverage
