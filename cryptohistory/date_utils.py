@@ -1,4 +1,4 @@
-import time
+from datetime import datetime
 
 
 def stringdate_to_datetime(string_dt, fmt='%Y-%m-%d %H:%M:%S'):
@@ -10,7 +10,7 @@ def stringdate_to_datetime(string_dt, fmt='%Y-%m-%d %H:%M:%S'):
     :return: converted DateTime object
     :rtype: DateTime
     """
-    return time.strptime(string_dt, fmt)
+    return datetime.strptime(string_dt, fmt)
 
 
 def datetime_to_timestamp(dt):
@@ -51,6 +51,6 @@ def validate_date_string(value):
     :raises ValueError: if value is not a valid string date
     """
     try:
-        time.strptime(value, '%Y-%m-%d')
+        datetime.strptime(value, '%Y-%m-%d')
     except (ValueError, TypeError):
         raise ValueError('Incorrect data format, should be YYYY-MM-DD')

@@ -1,5 +1,4 @@
-import datetime
-import time
+from datetime import datetime
 
 import pytest
 from date_utils import (
@@ -10,12 +9,12 @@ from date_utils import (
 
 def test_stringdate_to_datetime():
     string_dt = '2018-01-31 12:12:00'
-    expected = time.strptime(string_dt, '%Y-%m-%d %H:%M:%S')
+    expected = datetime.strptime(string_dt, '%Y-%m-%d %H:%M:%S')
     assert stringdate_to_datetime(string_dt) == expected
 
 
 def test_datetime_to_timestamp():
-    dt = datetime.datetime(
+    dt = datetime(
         year=2018, month=1, day=31, hour=13, minute=00, second=5,
         microsecond=0)
     expected = 1517400005000
