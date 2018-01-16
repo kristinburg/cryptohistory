@@ -1,11 +1,11 @@
-import time
-from datetime import datetime, timedelta
-import requests
-import json
 import csv
+from datetime import timedelta
+
+import requests
+
 from date_utils import (
     datetime_to_timestamp, stringdate_to_datetime,
-    stringdate_to_string_datetime, validate_date_string
+    stringdate_to_string_datetime
 )
 
 
@@ -43,32 +43,47 @@ def response_to_csv_rows(json_response):
     return csv_rows
 
 
-def get_crypto_historical_data(string_startdate, string_enddate):
+def get_crypto_historical_data_by_string(string_startdate, string_enddate,
+                                         delta=timedelta(days=1)):
+    string_startdatetime, string_enddatetime = (
+        stringdate_to_string_datetime(string_startdate),
+        stringdate_to_string_datetime(string_enddate, end=True)
+    )
+
+    start_date = stringdate_to_datetime(string_startdatetime)
+    end_date = stringdate_to_datetime(string_enddatetime)
+
+    # startdate should be earlier than enddate
+    if start_date > end_date:
+        raise ValueError('Start date can\t be later than end date.')
+
+    get_crypto_historical_data(start_date, end_date, delta)
+
+
+def get_crypto_historical_data(start_date, end_date, delta=timedelta(days=1)):
+
     with open('output.csv', 'w', 1) as output:
-        csv_headers = ['timestamp','market_cap','price_btc','price_usd', 'volume']
+        csv_headers = [
+            'timestamp', 'market_cap', 'price_btc', 'price_usd', 'volume']
         writer = csv.writer(output)
-        writer.writerow([g for g in csv_headers])
+        writer.writerow([csv_header for csv_header in csv_headers])
 
-        sd = stringdate_to_datetime(string_startdate)
-        ed = stringdate_to_datetime(string_enddate)
-        delta = timedelta(days=1)
-        url = generate_bitcoin_url(sd, sd+delta)
+        url = generate_bitcoin_url(start_date, end_date + delta)
 
-        while sd <= ed:
+        while start_date <= end_date:
             response = requests.get(url)
             data = response.json()
             csv_rows = response_to_csv_rows(data)
             for csv_row in csv_rows:
                 output.write(','.join([str(x) for x in csv_row]) + '\n')
-            sd += delta
-        output.close()
+            start_date += delta
 
 
 if __name__ == '__main__':
     """
     Only run this code when explicitly calling it. (not via import)
     """
-    x = '2017-12-01 00:00:00'
-    y = '2017-12-02 00:00:00'
+    start_date = '2017-12-01'
+    end_date = '2017-12-02'
 
-    get_crypto_historical_data(x, y)
+    get_crypto_historical_data_by_string(start_date, end_date)
