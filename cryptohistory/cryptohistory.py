@@ -12,8 +12,19 @@ from date_utils import (
 BTC = 'bitcoin'
 ETH = 'ethereum'
 
+AVAILABLE_CURRENCIES = [
+    BTC, ETH
+]
+
+
+def validate_currency(value):
+    if currency not in AVAILABLE_CURRENCIES:
+        raise ValueError(f'{currency} is not a valid currency')
+
 
 def generate_currency_url(start_datetime, end_datetime, currency=BTC):
+    validate_currency(currency)
+
     start_timestamp = datetime_to_timestamp(start_datetime)
     end_timestamp = datetime_to_timestamp(end_datetime)
     url = 'https://graphs.coinmarketcap.com/currencies'
@@ -40,10 +51,11 @@ def response_to_csv_rows(json_response):
     return csv_rows
 
 
-def get_crypto_historical_data_by_string(string_startdate,
-                                         string_enddate,
-                                         delta=timedelta(days=1),
-                                         currency=BTC):
+def get_crypto_historical_data(string_startdate,
+                               string_enddate,
+                               delta=timedelta(days=1),
+                               currency=BTC):
+
     string_startdatetime, string_enddatetime = (
         stringdate_to_string_datetime(string_startdate),
         stringdate_to_string_datetime(string_enddate, end=True)
@@ -56,13 +68,16 @@ def get_crypto_historical_data_by_string(string_startdate,
     if start_date > end_date:
         raise ValueError('Start date can\t be later than end date.')
 
-    get_crypto_historical_data(start_date, end_date, delta)
+    # validate that a correct currency is being used
+    validate_currency(currency)
+
+    _get_crypto_historical_data(start_date, end_date, delta)
 
 
-def get_crypto_historical_data(start_date,
-                               end_date,
-                               delta=timedelta(days=1),
-                               currency=BTC):
+def _get_crypto_historical_data(start_date,
+                                end_date,
+                                delta=timedelta(days=1),
+                                currency=BTC):
 
     with open('output.csv', 'w', 1) as output:
         csv_headers = [
@@ -90,5 +105,4 @@ if __name__ == '__main__':
     currency = BTC
     delta = timedelta(days=1)
 
-    get_crypto_historical_data_by_string(
-        start_date, end_date, delta, currency)
+    get_crypto_historical_data(start_date, end_date, delta, currency)
