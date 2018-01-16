@@ -57,8 +57,9 @@ def get_crypto_historical_data(string_startdate, string_enddate):
         while sd <= ed:
             response = requests.get(url)
             data = response.json()
-            csv_row = response_to_csv_rows(data)
-            output.write(csv_row + '\n')
+            csv_rows = response_to_csv_rows(data)
+            for csv_row in csv_rows:
+                output.write(','.join([str(x) for x in csv_row]) + '\n')
             sd += delta
         output.close()
 
@@ -68,7 +69,7 @@ if __name__ == '__main__':
     Only run this code when explicitly calling it. (not via import)
     """
     x = '2017-12-01 00:00:00'
-    y = '2017-12-01 2:00:00'
+    y = '2017-12-01 1:00:00'
 
     get_crypto_historical_data(x, y)
     # r = requests.get(url)
