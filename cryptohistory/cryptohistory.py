@@ -51,7 +51,7 @@ def get_crypto_historical_data(string_startdate, string_enddate):
 
         sd = stringdate_to_datetime(string_startdate)
         ed = stringdate_to_datetime(string_enddate)
-        delta = timedelta(hours=1)
+        delta = timedelta(days=1)
         url = generate_bitcoin_url(sd, sd+delta)
 
         while sd <= ed:
@@ -69,8 +69,6 @@ if __name__ == '__main__':
     Only run this code when explicitly calling it. (not via import)
     """
     x = '2017-12-01 00:00:00'
-    y = '2017-12-01 1:00:00'
+    y = '2017-12-02 00:00:00'
 
     get_crypto_historical_data(x, y)
-    # r = requests.get(url)
-    # print(r.headers)
