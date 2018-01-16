@@ -8,7 +8,6 @@ from date_utils import (
     stringdate_to_string_datetime
 )
 
-
 BTC = 'bitcoin'
 ETH = 'ethereum'
 
@@ -18,8 +17,8 @@ AVAILABLE_CURRENCIES = [
 
 
 def validate_currency(value):
-    if currency not in AVAILABLE_CURRENCIES:
-        raise ValueError(f'{currency} is not a valid currency')
+    if value not in AVAILABLE_CURRENCIES:
+        raise ValueError(f'{value} is not a valid currency')
 
 
 def generate_currency_url(start_datetime, end_datetime, currency=BTC):
@@ -49,6 +48,37 @@ def response_to_csv_rows(json_response):
                    price_usd_value, volume_usd_value]
         csv_rows.append(csv_row)
     return csv_rows
+
+
+def generate_api_urls(start_datetime,
+                      end_datetime,
+                      currency=BTC,
+                      delta=timedelta(days=1)):
+    """
+    Return a list of generated urls for given start_date, end_date, delta &
+    currency.
+
+    :param start_date DateTime
+    :param end_date DateTime
+
+    :return: list of API urls
+    :rtype: list of str
+    """
+    previous_datetime = start_datetime
+    next_datetime = start_datetime + delta
+
+    urls = []
+
+    while previous_datetime <= end_datetime:
+        urls.append(
+            generate_currency_url(
+                previous_datetime, next_datetime, currency=currency))
+
+        # now increase them
+        previous_datetime += delta
+        next_datetime += delta
+
+    return urls
 
 
 def get_crypto_historical_data(string_startdate,
