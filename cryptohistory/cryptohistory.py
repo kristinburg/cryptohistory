@@ -17,13 +17,15 @@ def generate_bitcoin_url(start_datetime_obj, end_datetime_obj):
 
 def get_crypto_historical_data(string_startdate, string_enddate):
     with open('output.csv', 'w', 1) as output:
+        schema = ['timestamp','market_cap','price_usd','price_btc', 'volume']
+        writer = csv.writer(output)
+        # Gives the header name row into csv
+        writer.writerow([g for g in schema])
+
         sd = stringdate_to_datetime(string_startdate)
         ed = stringdate_to_datetime(string_enddate)
-
         delta = timedelta(hours=1)
-
         url = generate_bitcoin_url(sd, sd+delta)
-
         while sd <= ed:
             response = requests.get(url)
             output.write(response.text + '\n')
