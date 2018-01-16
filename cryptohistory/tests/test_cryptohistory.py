@@ -3,7 +3,8 @@ from datetime import datetime
 import pytest
 
 from cryptohistory import (
-    BTC, ETH, generate_api_urls, response_to_csv_rows, validate_currency
+    BTC, ETH, generate_currency_api_urls, response_to_csv_rows,
+    validate_currency
 )
 
 
@@ -18,7 +19,7 @@ def test_validate_currency():
         assert validate_currency(None)
 
 
-def test_generate_api_urls_1_day():
+def test_generate_currency_api_urls_1_day():
     start = datetime(
         year=2018, month=1, day=1, hour=0, minute=00, second=0,
         microsecond=0)
@@ -30,12 +31,12 @@ def test_generate_api_urls_1_day():
         'https://graphs.coinmarketcap.com/currencies/bitcoin/1514761200000/1514847600000/',  # noqa
         'https://graphs.coinmarketcap.com/currencies/bitcoin/1514847600000/1514934000000/',  # noqa
     ]
-    result = generate_api_urls(start, end, currency=BTC)
+    result = generate_currency_api_urls(start, end, currency=BTC)
 
     assert result == expected
 
 
-def test_generate_api_urls_4_days():
+def test_generate_currency_api_urls_4_days():
     start = datetime(
         year=2018, month=1, day=1, hour=0, minute=00, second=0,
         microsecond=0)
@@ -50,12 +51,12 @@ def test_generate_api_urls_4_days():
         'https://graphs.coinmarketcap.com/currencies/bitcoin/1515020400000/1515106800000/',  # noqa
     ]
 
-    result = generate_api_urls(start, end, currency=BTC)
+    result = generate_currency_api_urls(start, end, currency=BTC)
 
     assert result == expected
 
 
-def test_generate_api_urls_365_days():
+def test_generate_currency_api_urls_365_days():
     start = datetime(
         year=2017, month=1, day=1, hour=0, minute=00, second=0,
         microsecond=0)
@@ -63,7 +64,7 @@ def test_generate_api_urls_365_days():
         year=2017, month=12, day=31, hour=0, minute=00, second=0,
         microsecond=0)
 
-    result = generate_api_urls(start, end, currency=BTC)
+    result = generate_currency_api_urls(start, end, currency=BTC)
 
     assert len(result) == 365
 

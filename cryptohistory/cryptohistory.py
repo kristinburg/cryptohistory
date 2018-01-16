@@ -50,10 +50,10 @@ def response_to_csv_rows(json_response):
     return csv_rows
 
 
-def generate_api_urls(start_datetime,
-                      end_datetime,
-                      currency=BTC,
-                      delta=timedelta(days=1)):
+def generate_currency_api_urls(start_datetime,
+                               end_datetime,
+                               currency=BTC,
+                               delta=timedelta(days=1)):
     """
     Return a list of generated urls for given start_date, end_date, delta &
     currency.
@@ -91,39 +91,43 @@ def get_crypto_historical_data(string_startdate,
         stringdate_to_string_datetime(string_enddate, end=True)
     )
 
-    start_date = stringdate_to_datetime(string_startdatetime)
-    end_date = stringdate_to_datetime(string_enddatetime)
+    start_datetime = stringdate_to_datetime(string_startdatetime)
+    end_datetime = stringdate_to_datetime(string_enddatetime)
 
     # startdate should be earlier than enddate
-    if start_date > end_date:
+    if start_datetime > end_datetime:
         raise ValueError('Start date can\t be later than end date.')
 
     # validate that a correct currency is being used
     validate_currency(currency)
 
-    _get_crypto_historical_data(start_date, end_date, delta)
+    _get_crypto_historical_data(
+        start_datetime, end_datetime, delta=delta, currency=currency)
 
 
-def _get_crypto_historical_data(start_date,
-                                end_date,
+def _get_crypto_historical_data(start_datetime,
+                                end_datetime,
                                 delta=timedelta(days=1),
                                 currency=BTC):
+    csv_headers = [
+        'timestamp', 'market_cap', 'price_btc', 'price_usd', 'volume']
 
     with open('output.csv', 'w', 1) as output:
-        csv_headers = [
-            'timestamp', 'market_cap', 'price_btc', 'price_usd', 'volume']
         writer = csv.writer(output)
         writer.writerow([csv_header for csv_header in csv_headers])
 
-        url = generate_currency_url(start_date, end_date + delta)
+        generated_urls = generate_currency_api_urls(
+            start_datetime=start_datetime,
+            end_datetime=end_datetime,
+            delta=delta,
+            currency=currency)
 
-        while start_date <= end_date:
+        for url in generated_urls:
             response = requests.get(url)
-            data = response.json()
-            csv_rows = response_to_csv_rows(data)
+            csv_rows = response_to_csv_rows(response.json())
+
             for csv_row in csv_rows:
                 output.write(','.join([str(x) for x in csv_row]) + '\n')
-            start_date += delta
 
 
 if __name__ == '__main__':
