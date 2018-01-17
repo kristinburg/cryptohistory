@@ -133,8 +133,8 @@ def _get_crypto_historical_data(start_datetime,
                 for csv_row in csv_rows:
                     output.write(','.join([str(x) for x in csv_row]) + '\n')
             else:
-                time.sleep(1 + attempt)
-                try_response(attempt=(attempt * 2))
+                time.sleep(2 + attempt)
+                try_response(url=url, attempt=(attempt * 2))
                 if attempt > 64:
                     raise ValueError(
                         'Tried too many times for url: {url}'.format(url))
@@ -147,8 +147,8 @@ if __name__ == '__main__':
     """
     Only run this code when explicitly calling it. (not via import)
     """
-    start_date = '2017-01-01'
-    end_date = '2017-01-03'
+    start_date = '2017-10-25'
+    end_date = '2018-01-16'
     currency = BTC
     delta = timedelta(days=1)
 
