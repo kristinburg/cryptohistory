@@ -1,4 +1,4 @@
-output.csv
+*.csv
 .cache/
 htmlcov/
 *.pyc

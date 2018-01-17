@@ -1,4 +1,5 @@
 import csv
+import time
 from datetime import timedelta
 
 import requests
@@ -112,7 +113,9 @@ def _get_crypto_historical_data(start_datetime,
     csv_headers = [
         'timestamp', 'market_cap', 'price_btc', 'price_usd', 'volume']
 
-    with open('output.csv', 'w', 1) as output:
+    filename = f'{currency}-{start_datetime}-{end_datetime}.csv'
+
+    with open(filename, 'w', 1) as output:
         writer = csv.writer(output)
         writer.writerow([csv_header for csv_header in csv_headers])
 
@@ -122,20 +125,30 @@ def _get_crypto_historical_data(start_datetime,
             delta=delta,
             currency=currency)
 
-        for url in generated_urls:
+        def try_response(url, attempt=0):
             response = requests.get(url)
-            csv_rows = response_to_csv_rows(response.json())
+            if response.status_code == 200:
+                csv_rows = response_to_csv_rows(response.json())
 
-            for csv_row in csv_rows:
-                output.write(','.join([str(x) for x in csv_row]) + '\n')
+                for csv_row in csv_rows:
+                    output.write(','.join([str(x) for x in csv_row]) + '\n')
+            else:
+                time.sleep(1 + attempt)
+                try_response(attempt=(attempt * 2))
+                if attempt > 64:
+                    raise ValueError(
+                        'Tried too many times for url: {url}'.format(url))
+
+        for url in generated_urls:
+            try_response(url)
 
 
 if __name__ == '__main__':
     """
     Only run this code when explicitly calling it. (not via import)
     """
-    start_date = '2016-02-01'
-    end_date = '2017-01-01'
+    start_date = '2017-01-01'
+    end_date = '2017-01-03'
     currency = BTC
     delta = timedelta(days=1)
 
