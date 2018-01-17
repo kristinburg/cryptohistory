@@ -26,7 +26,7 @@ def generate_currency_url(start_datetime, end_datetime, currency=BTC):
 
     start_timestamp = datetime_to_timestamp(start_datetime)
     end_timestamp = datetime_to_timestamp(end_datetime)
-    url = 'https://graphs.coinmarketcap.com/currencies'
+    url = 'https://graphs2.coinmarketcap.com/currencies'
     return f'{url}/{currency}/{start_timestamp}/{end_timestamp}/'
 
 
@@ -134,8 +134,8 @@ if __name__ == '__main__':
     """
     Only run this code when explicitly calling it. (not via import)
     """
-    start_date = '2017-12-01'
-    end_date = '2017-12-02'
+    start_date = '2016-02-01'
+    end_date = '2017-01-01'
     currency = BTC
     delta = timedelta(days=1)
 
