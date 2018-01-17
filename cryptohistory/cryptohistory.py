@@ -147,8 +147,8 @@ if __name__ == '__main__':
     """
     Only run this code when explicitly calling it. (not via import)
     """
-    start_date = '2017-10-25'
-    end_date = '2018-01-16'
+    start_date = '2013-04-28'
+    end_date = '2016-01-01'
     currency = BTC
     delta = timedelta(days=1)
 
