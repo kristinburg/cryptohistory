@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from crypto.models import Entry
+from cryptohistory.models import Entry
 
 
 class EntryAdmin(admin.ModelAdmin):

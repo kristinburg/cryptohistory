@@ -1,9 +1,10 @@
-import csv
+# import csv
 import time
 from datetime import timedelta
 
 import requests
 
+from cryptohistory.models import Entry
 from date_utils import (
     datetime_to_timestamp, stringdate_to_datetime,
     stringdate_to_string_datetime
@@ -110,14 +111,14 @@ def _get_crypto_historical_data(start_datetime,
                                 end_datetime,
                                 delta=timedelta(days=1),
                                 currency=BTC):
-    csv_headers = [
-        'timestamp', 'market_cap', 'price_btc', 'price_usd', 'volume']
+    # csv_headers = [
+    #     'timestamp', 'market_cap', 'price_btc', 'price_usd', 'volume', 'currency']
 
-    filename = f'{currency}-{start_datetime}-{end_datetime}.csv'
+    # filename = f'{currency}-{start_datetime}-{end_datetime}.csv'
 
-    with open(filename, 'w', 1) as output:
-        writer = csv.writer(output)
-        writer.writerow([csv_header for csv_header in csv_headers])
+    # with open(filename, 'w', 1) as output:
+        # writer = csv.writer(output)
+        # writer.writerow([csv_header for csv_header in csv_headers])
 
         generated_urls = generate_currency_api_urls(
             start_datetime=start_datetime,
@@ -131,7 +132,15 @@ def _get_crypto_historical_data(start_datetime,
                 csv_rows = response_to_csv_rows(response.json())
 
                 for csv_row in csv_rows:
-                    output.write(','.join([str(x) for x in csv_row]) + '\n')
+                    Entry.objects.create(
+                        coin=currency,
+                        timestamp=csv_row[0],
+                        market_cap=csv_row[1],
+                        price_btc=csv_row[2],
+                        price_usd=csv_row[3],
+                        volume=csv_row[4]
+                    )
+                    # output.write(','.join([str(x) for x in csv_row]) + f',{currency}\n')
             else:
                 time.sleep(2 + attempt)
                 try_response(url=url, attempt=(attempt * 2))
@@ -147,9 +156,9 @@ if __name__ == '__main__':
     """
     Only run this code when explicitly calling it. (not via import)
     """
-    start_date = '2013-04-28'
-    end_date = '2016-01-01'
-    currency = BTC
+    start_date = '2015-08-07'
+    end_date = '2015-08-09'
+    currency = ETH
     delta = timedelta(days=1)
 
     get_crypto_historical_data(start_date, end_date, delta, currency)
