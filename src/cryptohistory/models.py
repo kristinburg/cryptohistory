@@ -11,3 +11,6 @@ class Entry(models.Model):
     price_usd = models.DecimalField(
         null=True, decimal_places=11, max_digits=22)
     volume = models.PositiveIntegerField(null=True)
+
+    class Meta:
+        unique_together = ('dt', 'coin')

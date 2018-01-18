@@ -9,8 +9,8 @@ class Command(BaseCommand):
     help = 'Import cryptos'
 
     def handle(self, *args, **options):
-        start_date = '2015-08-07'
-        end_date = '2015-08-09'
+        start_date = '2015-08-11'
+        end_date = '2016-01-18'
         currency = ETH
         delta = timedelta(days=1)
 
