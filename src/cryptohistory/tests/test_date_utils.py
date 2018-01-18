@@ -1,7 +1,8 @@
 from datetime import datetime
 
 import pytest
-from date_utils import (
+
+from cryptohistory.date_utils import (
     datetime_to_timestamp, stringdate_to_datetime,
     stringdate_to_string_datetime, validate_date_string
 )

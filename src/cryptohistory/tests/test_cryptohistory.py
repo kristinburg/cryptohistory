@@ -2,10 +2,12 @@ from datetime import datetime
 
 import pytest
 
-from cryptohistory import (
+from cryptohistory.utils import (
     BTC, ETH, generate_currency_api_urls, response_to_csv_rows,
     validate_currency
 )
+
+pytestmark = pytest.mark.django_db(transaction=True)
 
 
 def test_validate_currency():
@@ -28,8 +30,8 @@ def test_generate_currency_api_urls_1_day():
         microsecond=0)
 
     expected = [
-        'https://graphs.coinmarketcap.com/currencies/bitcoin/1514761200000/1514847600000/',  # noqa
-        'https://graphs.coinmarketcap.com/currencies/bitcoin/1514847600000/1514934000000/',  # noqa
+        'https://graphs2.coinmarketcap.com/currencies/bitcoin/1514761200000/1514847600000/',  # noqa
+        'https://graphs2.coinmarketcap.com/currencies/bitcoin/1514847600000/1514934000000/',  # noqa
     ]
     result = generate_currency_api_urls(start, end, currency=BTC)
 
@@ -45,10 +47,10 @@ def test_generate_currency_api_urls_4_days():
         microsecond=0)
 
     expected = [
-        'https://graphs.coinmarketcap.com/currencies/bitcoin/1514761200000/1514847600000/',  # noqa
-        'https://graphs.coinmarketcap.com/currencies/bitcoin/1514847600000/1514934000000/',  # noqa
-        'https://graphs.coinmarketcap.com/currencies/bitcoin/1514934000000/1515020400000/',  # noqa
-        'https://graphs.coinmarketcap.com/currencies/bitcoin/1515020400000/1515106800000/',  # noqa
+        'https://graphs2.coinmarketcap.com/currencies/bitcoin/1514761200000/1514847600000/',  # noqa
+        'https://graphs2.coinmarketcap.com/currencies/bitcoin/1514847600000/1514934000000/',  # noqa
+        'https://graphs2.coinmarketcap.com/currencies/bitcoin/1514934000000/1515020400000/',  # noqa
+        'https://graphs2.coinmarketcap.com/currencies/bitcoin/1515020400000/1515106800000/',  # noqa
     ]
 
     result = generate_currency_api_urls(start, end, currency=BTC)

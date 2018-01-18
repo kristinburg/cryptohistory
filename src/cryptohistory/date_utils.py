@@ -1,5 +1,8 @@
 from datetime import datetime
 
+import pytz
+from django.conf import settings
+
 
 def stringdate_to_datetime(string_dt, fmt='%Y-%m-%d %H:%M:%S'):
     """
@@ -11,6 +14,19 @@ def stringdate_to_datetime(string_dt, fmt='%Y-%m-%d %H:%M:%S'):
     :rtype: DateTime
     """
     return datetime.strptime(string_dt, fmt)
+
+
+def timestamp_to_datetime(ts):
+    """
+    Convert timestamp to DateTime object.
+
+    :param ts timestamp
+
+    :return: DateTime
+    :rtype: DateTime (timezone aware)
+    """
+    tz = pytz.timezone(settings.TIME_ZONE)
+    return datetime.fromtimestamp(int(ts) / 1000, tz)
 
 
 def datetime_to_timestamp(dt):

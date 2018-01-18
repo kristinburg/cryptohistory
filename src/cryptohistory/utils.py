@@ -4,11 +4,11 @@ from datetime import timedelta
 
 import requests
 
-from cryptohistory.models import Entry
-from date_utils import (
+from cryptohistory.date_utils import (
     datetime_to_timestamp, stringdate_to_datetime,
-    stringdate_to_string_datetime
+    stringdate_to_string_datetime, timestamp_to_datetime
 )
+from cryptohistory.models import Entry
 
 BTC = 'bitcoin'
 ETH = 'ethereum'
@@ -41,7 +41,7 @@ def response_to_csv_rows(json_response):
     csv_rows = []
 
     for i, market_cap in enumerate(market_caps):
-        timestamp = market_cap[0]
+        timestamp = timestamp_to_datetime(market_cap[0])
         market_cap_value = market_cap[1]
         price_btc_value = price_btcs[i][1]
         price_usd_value = price_usds[i][1]
@@ -111,14 +111,6 @@ def _get_crypto_historical_data(start_datetime,
                                 end_datetime,
                                 delta=timedelta(days=1),
                                 currency=BTC):
-    # csv_headers = [
-    #     'timestamp', 'market_cap', 'price_btc', 'price_usd', 'volume', 'currency']
-
-    # filename = f'{currency}-{start_datetime}-{end_datetime}.csv'
-
-    # with open(filename, 'w', 1) as output:
-        # writer = csv.writer(output)
-        # writer.writerow([csv_header for csv_header in csv_headers])
 
         generated_urls = generate_currency_api_urls(
             start_datetime=start_datetime,
@@ -132,15 +124,15 @@ def _get_crypto_historical_data(start_datetime,
                 csv_rows = response_to_csv_rows(response.json())
 
                 for csv_row in csv_rows:
-                    Entry.objects.create(
-                        coin=currency,
-                        timestamp=csv_row[0],
-                        market_cap=csv_row[1],
-                        price_btc=csv_row[2],
-                        price_usd=csv_row[3],
-                        volume=csv_row[4]
+                    obj, created = Entry.objects.update_or_create(
+                        coin=currency, dt=csv_row[0],
+                        defaults={
+                            'market_cap': csv_row[1],
+                            'price_btc': csv_row[2],
+                            'price_usd': csv_row[3],
+                            'volume': csv_row[4],
+                        },
                     )
-                    # output.write(','.join([str(x) for x in csv_row]) + f',{currency}\n')
             else:
                 time.sleep(2 + attempt)
                 try_response(url=url, attempt=(attempt * 2))
@@ -150,15 +142,3 @@ def _get_crypto_historical_data(start_datetime,
 
         for url in generated_urls:
             try_response(url)
-
-
-if __name__ == '__main__':
-    """
-    Only run this code when explicitly calling it. (not via import)
-    """
-    start_date = '2015-08-07'
-    end_date = '2015-08-09'
-    currency = ETH
-    delta = timedelta(days=1)
-
-    get_crypto_historical_data(start_date, end_date, delta, currency)
