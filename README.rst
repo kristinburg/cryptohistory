@@ -1,7 +1,7 @@
 Crypto History
 ==============
 
-Testing:
+Testing
 -------
 
 ::
@@ -10,7 +10,7 @@ Testing:
     $ pytest
 
 
-Coverage:
+Coverage
 --------
 
 Use coverage for an overview on how much the tests cover the project.
